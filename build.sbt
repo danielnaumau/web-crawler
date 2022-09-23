@@ -1,8 +1,11 @@
-import Dependencies.Libraries
+import Dependencies._
 
-ThisBuild / version := "0.1.0-SNAPSHOT"
+ThisBuild / version := "latest"
+ThisBuild / scalaVersion := "2.13.8"
 
-ThisBuild / scalaVersion := "2.13.9"
+enablePlugins(JavaAppPackaging)
+
+dockerRepository := Some("danielnaumau")
 
 lazy val root = (project in file("."))
   .settings(

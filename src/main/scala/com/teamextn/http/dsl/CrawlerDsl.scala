@@ -28,17 +28,14 @@ final class CrawlerDsl[F[_]: Async: Parallel: Logger](crawlerClient: CrawlerClie
         } yield status
     }
 
-  def crawlUrls(urls: List[Uri]): F[ProcessedUrls] = {
+  def crawlUrls(urls: List[Uri]): F[ProcessedUrls] =
     urls.parTraverse(crawlerClient.get).map(foldRequest)
-  }
 
-  def foldRequest(responses: List[CrawlResponse]): ProcessedUrls = {
-    responses.foldLeft(ProcessedUrls(List.empty, List.empty)) { (result, response) =>
-      import result._
+  def foldRequest(responses: List[CrawlResponse]): ProcessedUrls =
+    responses.foldLeft(ProcessedUrls(List.empty, List.empty)) { (processedUrls, response) =>
       response match {
-        case success: Success => result.copy(results = results :+ success)
-        case error: Error     => result.copy(errors = errors :+ error)
+        case success: Success => processedUrls.copy(results = processedUrls.results :+ success)
+        case error: Error     => processedUrls.copy(errors = processedUrls.errors :+ error)
       }
     }
-  }
 }
