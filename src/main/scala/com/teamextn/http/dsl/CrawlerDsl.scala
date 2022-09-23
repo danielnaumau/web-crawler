@@ -9,20 +9,23 @@ import com.teamextn.http.Models.CrawlResponse
 import com.teamextn.http.Models.CrawlResponse._
 import com.teamextn.http.Models.InMessage.CrawlBody
 import com.teamextn.http.Models.OutMessage.ProcessedUrls
-import org.http4s.circe.jsonOf
 import org.http4s._
+import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 import org.typelevel.log4cats.Logger
 
 final class CrawlerDsl[F[_]: Async: Parallel: Logger](crawlerClient: CrawlerClient[F]) extends Http4sDsl[F] {
-  private implicit val crawlBodyDecoder: EntityDecoder[F, CrawlBody] = jsonOf[F, CrawlBody]
+  private implicit val processedUrlsEncoder: EntityEncoder[F, ProcessedUrls] = jsonEncoderOf[F, ProcessedUrls]
+  private implicit val crawlBodyDecoder: EntityDecoder[F, CrawlBody]         = jsonOf[F, CrawlBody]
+
   def routes: HttpRoutes[F] =
     HttpRoutes.of[F] {
       case req @ POST -> Root =>
         for {
-          body <- req.as[CrawlBody]
-          res  <- crawlUrls(body.urls)
-        } yield res
+          body   <- req.as[CrawlBody]
+          res    <- crawlUrls(body.urls)
+          status <- Ok(res)
+        } yield status
     }
 
   def crawlUrls(urls: List[Uri]): F[ProcessedUrls] = {
