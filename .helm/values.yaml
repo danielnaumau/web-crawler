@@ -1,0 +1,29 @@
+image:
+  repository: "danielnaumau/web-crawler"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+availability:
+  minAvailable: 1
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+
+livenessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 60
+
+# DNS address where clients will be sending requests.
+host: web-crawler.clevelheart.com
+
+# Secret to store sensitive information for TLS certificates.
+secretForCerts: web-crawler-tls-secret
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
