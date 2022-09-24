@@ -23,6 +23,7 @@ final case class HttpServer[F[_]: Async](routes: HttpRoutes[F], httpConfig: Http
 }
 
 object HttpServer {
+
   def apply[F[_]: Async: Logger: Parallel](httpConfig: HttpConfig, crawlerClient: CrawlerClient[F]): HttpServer[F] = {
 
     val crawlerDsl     = new CrawlerDsl[F](crawlerClient)
