@@ -16,9 +16,9 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import java.net.URL
 
 trait HttpServerFixtures {
-  val crawlUri = Uri.unsafeFromString("/api/crawl")
+  val crawlUri: Uri = Uri.unsafeFromString("/api/crawl")
 
-  val crawlerClient = mock[CrawlerClient[IO]]
+  val crawlerClient: CrawlerClient[IO] = mock[CrawlerClient[IO]]
 
   val successUrl1 = new URL("https://test1.com")
   when(crawlerClient.get(successUrl1)).thenReturn(IO { CrawlResponse.Success("", successUrl1) })
@@ -40,7 +40,7 @@ trait HttpServerFixtures {
 
   implicit val catsLogger: SelfAwareLogger[IO] = Slf4jLogger.getLogger[IO]
 
-  val httpServer = HttpServer(HttpConfig("0.0.0.0", 8080), crawlerClient)
+  val httpServer: HttpServer[IO] = HttpServer(HttpConfig("0.0.0.0", 8080), crawlerClient)
 
   def decode[T](response: Response[IO])(implicit decoder: EntityDecoder[IO, T]): T =
     response.as[T].unsafeRunSync()
