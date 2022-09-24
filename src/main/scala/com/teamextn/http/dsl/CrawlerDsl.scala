@@ -5,10 +5,8 @@ import io.circe.generic.auto._
 import cats.effect.kernel.Async
 import cats.implicits._
 import com.teamextn.http.CrawlerClient
-import com.teamextn.http.Models.CrawlResponse
+import com.teamextn.http.Models._
 import com.teamextn.http.Models.CrawlResponse._
-import com.teamextn.http.Models.InMessage.CrawlBody
-import com.teamextn.http.Models.OutMessage.ProcessedUrls
 import org.http4s._
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
