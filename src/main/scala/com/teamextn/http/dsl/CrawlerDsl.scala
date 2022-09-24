@@ -17,12 +17,12 @@ import java.net.URL
 
 final class CrawlerDsl[F[_]: Async: Parallel: Logger](crawlerClient: CrawlerClient[F]) extends Http4sDsl[F] {
   private implicit val processedUrlsEncoder: EntityEncoder[F, ProcessedUrls] = jsonEncoderOf[F, ProcessedUrls]
-  private implicit val crawlBodyDecoder: EntityDecoder[F, CrawlBody]         = jsonOf[F, CrawlBody]
+  private implicit val crawlRequestDecoder: EntityDecoder[F, CrawlRequest]   = jsonOf[F, CrawlRequest]
 
   def routes: HttpRoutes[F] =
     HttpRoutes.of[F] {
       case req @ POST -> Root =>
-        decode[CrawlBody](req)(crawlBody => crawlUrls(crawlBody.urls).flatMap(Ok(_)))
+        decode[CrawlRequest](req)(crawlReq => crawlUrls(crawlReq.urls).flatMap(Ok(_)))
     }
 
   private def decode[T](req: Request[F])(f: T => F[Response[F]])(

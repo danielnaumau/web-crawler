@@ -4,19 +4,20 @@ import cats.effect.kernel.Concurrent
 import cats.implicits.{catsSyntaxApplicativeError, toFunctorOps}
 import com.teamextn.http.Models.CrawlResponse
 import org.http4s.client.Client
-import org.http4s.Uri
+
+import java.net.URL
 
 trait CrawlerClient[F[_]] {
-  def get(uri: Uri): F[CrawlResponse]
+  def get(url: URL): F[CrawlResponse]
 }
 
 object CrawlerClient {
   def apply[F[_]: Concurrent](
-      httpClient: Client[F],
+      httpClient: Client[F]
   ): CrawlerClient[F] =
-    (uri: Uri) =>
+    (url: URL) =>
       httpClient
-        .expect[String](uri)
-        .map[CrawlResponse](CrawlResponse.Success(_, uri))
-        .handleError(err => CrawlResponse.Error(err.getLocalizedMessage, uri))
+        .expect[String](url.toString)
+        .map[CrawlResponse](CrawlResponse.Success(_, url))
+        .handleError(err => CrawlResponse.Error(err.getLocalizedMessage, url))
 }

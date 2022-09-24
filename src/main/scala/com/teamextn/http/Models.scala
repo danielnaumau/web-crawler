@@ -12,7 +12,7 @@ object Models {
     final case class Error(msg: String, url: URL)    extends CrawlResponse
   }
 
-  final case class CrawlBody(urls: List[URL])
+  final case class CrawlRequest(urls: List[URL])
   final case class ProcessedUrls(results: List[Success], errors: List[Error])
 
 }
