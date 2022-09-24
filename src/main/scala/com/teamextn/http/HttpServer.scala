@@ -30,7 +30,7 @@ object HttpServer {
     val healthCheckDsl = new HealthCheckDsl[F]
 
     val routes = Router[F](
-      "isAlive"    -> healthCheckDsl.routes,
+      "/isAlive"   -> healthCheckDsl.routes,
       "/api/crawl" -> crawlerDsl.routes
     )
 
