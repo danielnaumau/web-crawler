@@ -37,5 +37,5 @@ request body:
 }
 ```
 
-###
+### Development 
 Execute **sbt run** to run this application locally. It'll be available here: **localhost:8080**
